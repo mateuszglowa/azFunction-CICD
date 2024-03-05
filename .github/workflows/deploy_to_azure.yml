@@ -7,7 +7,7 @@ env:
   AZURE_FUNCTIONAPP_NAME: 'app-test-githubcicd'   # set this to your function app name on Azure
   AZURE_FUNCTIONAPP_PACKAGE_PATH: '.'       # set this to the path to your function app project, defaults to the repository root
   PYTHON_VERSION: '3.10'                    #t this to the python version to use (e.g. '3.6', '3.7', '3.8')
-  AZURE_FUNCTIONAPP_URL: https://app-test-githubcicd.azurewebsites.net
+  AZURE_FUNCTIONAPP_URL: 'https://app-test-githubcicd.azurewebsites.net'
 
 jobs:
   build:
