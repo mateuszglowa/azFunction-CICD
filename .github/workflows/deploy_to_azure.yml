@@ -1,40 +1,39 @@
 name: Deploy Python project to Azure Function App
 
-on:
-  [push]
+on: [push]
 
 env:
-  AZURE_FUNCTIONAPP_NAME: 'app-test-githubcicd'   # set this to your function app name on Azure
-  AZURE_FUNCTIONAPP_PACKAGE_PATH: '.'       # set this to the path to your function app project, defaults to the repository root
-  PYTHON_VERSION: '3.10'                    #t this to the python version to use (e.g. '3.6', '3.7', '3.8')
-  AZURE_FUNCTIONAPP_URL: 'https://app-test-githubcicd.azurewebsites.net'
+  AZURE_FUNCTIONAPP_NAME: "app-test-githubcicd" # set this to your function app name on Azure
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: "." # set this to the path to your function app project, defaults to the repository root
+  PYTHON_VERSION: "3.11" #t this to the python version to use (e.g. '3.6', '3.7', '3.8')
+  AZURE_FUNCTIONAPP_URL: "https://app-test-githubcicd.azurewebsites.net"
 
 jobs:
   build:
     runs-on: ubuntu-latest
     environment: dev
     steps:
-    - name: 'Checkout GitHub Action'
-      uses: actions/checkout@v3
+      - name: "Checkout GitHub Action"
+        uses: actions/checkout@v3
 
-    - name: Setup Python ${{ env.PYTHON_VERSION }} Environment
-      uses: actions/setup-python@v4
-      with:
-        python-version: ${{ env.PYTHON_VERSION }}
+      - name: Setup Python ${{ env.PYTHON_VERSION }} Environment
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
 
-    - name: 'Resolve Project Dependencies Using Pip'
-      shell: bash
-      run: |
-        pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt --target=".python_packages/lib/site-packages"
-        popd
+      - name: "Resolve Project Dependencies Using Pip"
+        shell: bash
+        run: |
+          pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt --target=".python_packages/lib/site-packages"
+          popd
 
-    - name: Upload artifact for deployment job
-      uses: actions/upload-artifact@v2
-      with:
-        name: python-app
-        path: |
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v2
+        with:
+          name: python-app
+          path: |
             ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH  }}
             !venv/
 
@@ -42,7 +41,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     environment:
-      name: 'Production'
+      name: "Production"
       url: ${{ env.AZURE_FUNCTIONAPP_URL }}
 
     steps:
@@ -52,7 +51,7 @@ jobs:
           name: python-app
           path: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH  }}
 
-      - name: 'Deploy to Azure Functions'
+      - name: "Deploy to Azure Functions"
         uses: Azure/functions-action@v1
         id: deploy-to-function
         with:
